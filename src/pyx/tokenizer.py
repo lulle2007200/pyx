@@ -485,25 +485,6 @@ class PyTokenizerImpl(Tokenizer):
 
 		return PyxTokenInfo.from_match(PyxTokenType.OP, match)
 
-	# def scan_string(self, match: Match) -> PyxTokenInfo:
-	# 	text = match.text
-
-	# 	quot = match.groups["quot"].text
-	# 	mid = string_mid[quot]
-	# 	end = string_end[quot]
-
-	# 	while True:
-	# 		if m := self.scanner.consume(mid):
-	# 			text += m.text
-	# 		elif m := self.scanner.consume(end):
-	# 			text += m.text
-	# 			return PyxTokenInfo.from_text(PyxTokenType.STRING, text, m.offset_start, m.pos_start)
-	# 		elif self.scanner.eof or self.scanner.has_data:
-	# 			rest = self.scanner.consume(len(self.scanner))
-	# 			assert rest is not None
-	# 			text += rest.string
-	# 			return PyxTokenInfo.from_text(PyxTokenType.ERRORTOKEN, text, match.offset_start, match.pos_start)
-
 	def _scan_one(self) -> Optional[PyxTokenInfo]:
 		if m := self.scanner.consume(Whitespace):
 			if self.is_start_of_line and self.is_top_level and not self.scanner.match(Newline, Comment, Eof):
@@ -528,12 +509,8 @@ class PyTokenizerImpl(Tokenizer):
 			return PyxTokenInfo.from_match(PyxTokenType.FSTRING_START, m)
 		elif self.scanner.match(PlainStringStart3) and (m := self.scanner.consume(PlainString3, multiline=True)):
 			return PyxTokenInfo.from_match(PyxTokenType.STRING, m)
-		# elif m := self.scanner.consume(PlainStringStart3):
-		# 	return self.scan_string(m)
 		elif m := self.scanner.consume(PlainString1):
 			return PyxTokenInfo.from_match(PyxTokenType.STRING, m)
-		# elif m := self.scanner.consume(PlainStringStart1):
-		# 	return self.scan_string(m)
 		elif m := self.scanner.consume(Number):
 			return PyxTokenInfo.from_match(PyxTokenType.NUMBER, m)
 		elif m := self.scanner.consume(Name):
@@ -580,11 +557,6 @@ class FStringTokenizer(Tokenizer):
 				return PyxTokenInfo.from_match(PyxTokenType.OP, m)
 			elif m := self.scanner.consume(self.mid, many=True):
 				return PyxTokenInfo.from_match(PyxTokenType.FSTRING_MIDDLE, m)
-			# elif m := self.scanner.consume(self.mid):
-			# 	text = m.text
-			# 	while n := self.scanner.consume(self.mid):
-			# 		text += n.string
-			# 	return PyxTokenInfo.from_text(PyxTokenType.FSTRING_MIDDLE, text, m.offset_start, m.pos_start)
 			elif m := self.scanner.advance(1):
 				return PyxTokenInfo.from_match(PyxTokenType.ERRORTOKEN, m)
 			else:
@@ -617,20 +589,6 @@ class PyxTokenizerImpl(Tokenizer):
 			return PyxTokenInfo.from_match(PyxTokenType.ERRORTOKEN, match)
 		return PyxTokenInfo.from_match(PyxTokenType.PYX_OP, match)
 
-	# def scan_comment(self, match: Match) -> PyxTokenInfo:
-	# 	text = match.text
-	# 	while True:
-	# 		if m := self.scanner.consume(PyxCommentEnd):
-	# 			text += m.text
-	# 			return PyxTokenInfo.from_text(PyxTokenType.PYX_COMMENT, text, match.offset_start, match.pos_start)
-	# 		elif m := self.scanner.consume(PyxCommentMid):
-	# 			text += m.text
-	# 		elif self.scanner.has_data or self.scanner.eof:
-	# 			rest = self.scanner.consume(len(self.scanner))
-	# 			assert rest
-	# 			text += rest.string
-	# 			return PyxTokenInfo.from_text(PyxTokenType.ERRORTOKEN, text, match.offset_start, match.pos_start)
-
 	def handle_element(self) -> PyxTokenInfo:
 		if m := self.scanner.consume(PyxCloseStart):
 			self.mode_stack.pop()
@@ -638,18 +596,11 @@ class PyxTokenizerImpl(Tokenizer):
 			return PyxTokenInfo.from_match(PyxTokenType.PYX_CLOSE_TAG_START, m)
 		elif self.scanner.match(PyxCommentStart) and (m := self.scanner.consume(PyxComment, multiline=True)):
 			return PyxTokenInfo.from_match(PyxTokenType.PYX_COMMENT, m)
-		# elif m := self.scanner.consume(PyxCommentStart):
-		# 	return self.scan_comment(m)
 		elif m := self.scanner.consume(PyxTagStart):
 			self.mode_stack.append(PyxTokenizerMode.Tag)
 			return PyxTokenInfo.from_match(PyxTokenType.PYX_TAG_START, m)
 		elif m := self.scanner.consume(PyxText, many=True):
 			return PyxTokenInfo.from_match(PyxTokenType.PYX_TEXT, m)
-		# elif m := self.scanner.consume(PyxText):
-		# 	text = m.text
-		# 	while n := self.scanner.consume(PyxText):
-		# 		text += n.string
-		# 	return PyxTokenInfo.from_text(PyxTokenType.PYX_TEXT, text, m.offset_start, m.pos_start)
 		elif m := self.scanner.consume(PyxOperator):
 			return self.handle_operator(m)
 		elif m := self.scanner.advance(1):
@@ -823,8 +774,6 @@ def main():
 		)
 
 		for t in ctx:
-			print(t)
-			continue
 			tokens.appendleft(t)
 
 			if t in flush_tokens:

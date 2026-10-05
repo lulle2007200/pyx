@@ -1,0 +1,108 @@
+# PEG grammar for pyx
+
+@class PyxParser
+
+@subheader'''
+from pyx.py_parser import PythonParser
+from pyx.tokenizer import PyxTokenType
+from pegen.tokenizer import BaseTokenizer, TokenInfo
+from typing import Optional, override
+
+
+class Parser(PythonParser):
+	def __init__(self,
+	             tokenizer: BaseTokenizer[PyxTokenType],
+	             *,
+	             verbose: bool=False,
+	             filename: str = "<unknown>",
+	             py_version: Optional[tuple]=None):
+	    super().__init__(tokenizer, # type: ignore
+	                     verbose=verbose, 
+	                     filename=filename, 
+	                     py_version=py_version)
+
+	@override
+	def expect(self, type: str) -> Optional[TokenInfo[PyxTokenType]]:
+		return super().expect(type) # type: ignore
+
+	def pyx_string(self) -> Optional[TokenInfo[PyxTokenType]]:
+		return self.expect("PYX_STRING")
+
+	def pyx_text(self) -> Optional[TokenInfo[PyxTokenType]]:
+		return self.expect("PYX_TEXT")
+
+'''
+
+@trailer'''
+if __name__ == "__main__":
+	from pegen.parser import simple_parser_main
+	from pyx.tokenizer import PyxTokenizer, PyxTokenGenerator
+
+	simple_parser_main(PyxParser,
+	                   PyxTokenizer,
+	                   PyxTokenGenerator,
+	                   lambda tree, filename: print(tree),
+	                   lambda tree, filename: None)
+'''
+
+pyx_root: pyx_element | pyx_fragment
+
+pyx_element:
+	| pyx_self_closing_element
+	| pyx_opening_element [pyx_children] pyx_closing_element
+
+pyx_self_closing_element: PYX_TAG_START pyx_element_name [pyx_attributes] PYX_TAG_SELFCLOSE
+
+pyx_opening_element: PYX_TAG_START pyx_element_name [pyx_attributes] PYX_TAG_END
+
+pyx_closing_element: PYX_CLOSE_TAG_START pyx_element_name PYX_TAG_END
+
+pyx_fragment: PYX_TAG_START PYX_TAG_END [pyx_children] PYX_CLOSE_TAG_START PYX_TAG_END
+
+pyx_element_name:
+	| pyx_identifier
+	| pyx_namespaced_name
+	| pyx_member_expression
+
+pyx_identifier: PYX_IDENTIFIER
+
+pyx_namespaced_name: pyx_identifier PYX_OP_COLON pyx_identifier
+
+pyx_member_expression: (pyx_identifier PYX_OP_DOT)+ pyx_identifier
+
+
+pyx_attributes: (pyx_spread_attribute | pyx_attribute)+
+
+pyx_spread_attribute: PYX_INTERP_START pyx_spread_assignment_expression PYX_INTERP_END
+
+pyx_attribute: pyx_attribute_name pyx_attribute_initializer
+
+pyx_attribute_name:
+	| pyx_identifier
+	| pyx_namespaced_name
+
+pyx_attribute_initializer: PYX_OP_EQ pyx_attribute_value
+
+pyx_attribute_value:
+	| PYX_STRING
+	| PYX_OP_SPREAD pyx_assignment_expression PYX_INTERP_END
+	| pyx_element
+	| pyx_fragment
+
+pyx_children: pyx_child+
+
+pyx_child: 
+	| PYX_TEXT
+	| pyx_element
+	| pyx_fragment
+	| pyx_child_expression
+	| pyx_spread_child_expression
+
+pyx_child_expression: PYX_INTERP_START pyx_assignment_expression PYX_INTERP_END
+
+pyx_spread_child_expression: PYX_INTERP_START pyx_spread_assignment_expression PYX_INTERP_END
+
+# TODO: parse an actual python assignment expression
+pyx_assignment_expression: pyx_identifier
+
+pyx_spread_assignment_expression: PYX_OP_SPREAD pyx_assignment_expression

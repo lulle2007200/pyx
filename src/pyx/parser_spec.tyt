@@ -1,0 +1,40 @@
+Start : PyxFragment | PyxElement
+
+# NOTE: Open tag must match close tag
+PyxElement : PyxSelfClosingElement | PyxOpeningElement PyxChildren? PyxClosingElement
+
+PyxOpeningElement : < PyxAttributes? >
+
+PyxClosingElement : </ PyxElementName >
+
+PyxFragment : <> PyxChildren? </>
+
+PyxElementName : PyxIdentifier | PyxNamespacedName | PyxMemberExpression
+
+PyxNamespacedName : PyxIdentifier : PyxIdentifier
+
+PyxMemberExpression : PyxIdentifier . PyxIdentifier | PyxIdentifier . PyxMemberExpression
+
+
+
+PyxAttributes : PyxSpreadAttribute PyxAttributes? | PyxAttribute PyxAttributes?
+
+PyxSpreadAttribute : { PyExpression }
+
+PyxAttribute : PyxAttributeName PyxAttributeInitializer
+
+PyxAttributeName : PyxIdentifier | PyxNamespacedName
+
+PyxAttributeInitializer : = PyxAttributeValue
+
+PyxAttributeValue : " PyxDoubleStringCharacters? " | ' PyxSingleStringCharacters? ' | { PyExpression } | PyxElement | PyxFragment
+
+PyxDoubleStringCharacters :: PyxDoubleStringCharacter PyxDoubleStringCharacters?
+
+PyxDoubleStringCharacter :: PyxStringCharacter excluding "
+
+PyxSingleStringCharacters :: PyxSingleStringCharacter PyxSingleStringCharacters?
+
+PyxSingleStringCharacter :: PyxStringCharacter excluding '
+
+PyxStringCharacter :: SourceCharacter but not one of 
