@@ -1,0 +1,38 @@
+[project]
+name = "pyx"
+version = "3.14"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Christoph Baumann", email = "lulle2007200@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "pegen",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+]
+
+[project.scripts]
+pyx = "pyx:main"
+
+[build-system]
+requires = ["hatchling", "hatch-build-scripts", "pegen"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.sdist]
+include = ["src/pyx", "pyx.gram", "token_spec.toml"]
+
+[[tool.hatch.build.hooks.build-scripts.scripts]]
+work_dir = "."
+out_dir = "."
+commands = [
+    "python -m pegen --output src/pyx/pyx_parser.py --token-spec token_spec.toml pyx.gram"
+]
+artifacts = ["src/pyx/pyx_parser.py"]
+
+[tool.uv.sources]
+pegen = { path = "../pegen" }

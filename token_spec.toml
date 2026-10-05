@@ -1,0 +1,145 @@
+exhaustive = true
+
+[tokens.NAME]
+maps_to = "name"
+[tokens.NUMBER]
+maps_to = "number"
+[tokens.STRING]
+maps_to = "string"
+[tokens.FSTRING_END]
+maps_to = "fstring_end"
+[tokens.FSTRING_MIDDLE]
+maps_to = "fstring_middle"
+[tokens.FSTRING_START]
+maps_to = "fstring_start"
+[tokens.OP]
+maps_to = "op"
+[tokens.TYPE_COMMENT]
+maps_to = "type_comment"
+[tokens.DEDENT]
+maps_to = "_dedent"
+calls = "self.expect('DEDENT')"
+[tokens.INDENT]
+maps_to = "_indent"
+calls = "self.expect('INDENT')"
+[tokens.ENDMARKER]
+maps_to = "_endmarker"
+calls = "self.expect('ENDMARKER')"
+[tokens.NEWLINE]
+maps_to = "_newline"
+calls = "self.expect('NEWLINE')"
+[tokens.ASYNC]
+maps_to = "_async"
+calls = "self.expect('ASYNC')"
+[tokens.AWAIT]
+maps_to = "_await"
+calls = "self.expect('AWAIT')"
+[tokens.SOFT_KEYWORD]
+maps_to = "soft_keyword"
+calls = "self.soft_keyword()"
+[tokens.AMPER]
+[tokens.AMPEREQUAL]
+[tokens.AT]
+[tokens.ATEQUAL]
+[tokens.CIRCUMFLEX]
+[tokens.CIRCUMFLEXEQUAL]
+[tokens.COLON]
+[tokens.COLONEQUAL]
+[tokens.COMMA]
+[tokens.DOT]
+[tokens.DOUBLESLASH]
+[tokens.DOUBLESLASHEQUAL]
+[tokens.DOUBLESTAR]
+[tokens.DOUBLESTAREQUAL]
+[tokens.ELLIPSIS]
+[tokens.EQEQUAL]
+[tokens.EQUAL]
+[tokens.ERRORTOKEN]
+[tokens.GREATER]
+[tokens.GREATEREQUAL]
+[tokens.ISEOF]
+[tokens.ISNONTERMINAL]
+[tokens.ISTERMINAL]
+[tokens.LBRACE]
+[tokens.LEFTSHIFT]
+[tokens.LEFTSHIFTEQUAL]
+[tokens.LESS]
+[tokens.LESSEQUAL]
+[tokens.LPAR]
+[tokens.LSQB]
+[tokens.MINEQUAL]
+[tokens.MINUS]
+[tokens.NOTEQUAL]
+[tokens.NT_OFFSET]
+[tokens.N_TOKENS]
+[tokens.PERCENT]
+[tokens.PERCENTEQUAL]
+[tokens.PLUS]
+[tokens.PLUSEQUAL]
+[tokens.RARROW]
+[tokens.RBRACE]
+[tokens.RIGHTSHIFT]
+[tokens.RIGHTSHIFTEQUAL]
+[tokens.RPAR]
+[tokens.RSQB]
+[tokens.SEMI]
+[tokens.SLASH]
+[tokens.SLASHEQUAL]
+[tokens.STAR]
+[tokens.STAREQUAL]
+[tokens.TILDE]
+[tokens.TYPE_IGNORE]
+[tokens.VBAR]
+[tokens.VBAREQUAL]
+[tokens.tok_name]
+[tokens.ENCODING]
+[tokens.NL]
+[tokens.COMMENT]
+[tokens.EXCLAMATION]
+[tokens.EXACT_TOKEN_TYPES]
+[tokens.TSTRING_START]
+[tokens.TSTRING_MIDDLE]
+[tokens.TSTRING_END]
+
+[tokens.WHITESPACE]
+calls = "self.expect('WHITESPACE')"
+
+[tokens.LINECONT]
+calls = "self.expect('LINECONT')"
+
+[tokens.PYX_WHITESPACE]
+calls = "self.expect('PYX_WHITESPACE')"
+[tokens.PYX_IDENTIFIER]
+maps_to = "pyx_identifier"
+calls = "self.expect('PYX_IDENTIFIER')"
+[tokens.PYX_STRING]
+maps_to = "pyx_string"
+calls = "self.pyx_string()"
+[tokens.PYX_COMMENT]
+maps_to = "pyx_comment"
+calls = "self.expect('PYX_COMMENT')"
+[tokens.PYX_TEXT]
+maps_to = "pyx_text"
+calls = "self.pyx_text()"
+[tokens.PYX_INTERP_START]
+calls = "self.expect('PYX_INTERP_START')"
+[tokens.PYX_INTERP_END]
+calls = "self.expect('PYX_INTERP_END')"
+[tokens.PYX_OP_EQ]
+calls = "self.expect('PYX_OP_EQ')"
+[tokens.PYX_OP_SPREAD]
+calls = "self.expect('PYX_OP_SPREAD')"
+[tokens.PYX_OP_DOT]
+calls = "self.expect('PYX_OP_DOT')"
+[tokens.PYX_OP_COLON]
+calls = "self.expect('PYX_OP_COLON')"
+[tokens.PYX_OP]
+calls = "self.expect('PYX_OP')"
+[tokens.PYX_TAG_END]
+calls = "self.expect('PYX_TAG_END')"
+[tokens.PYX_TAG_START]
+calls = "self.expect('PYX_TAG_START')"
+[tokens.PYX_CLOSE_TAG_START]
+calls = "self.expect('PYX_CLOSE_TAG_START')"
+[tokens.PYX_TAG_SELFCLOSE]
+calls = "self.expect('PYX_TAG_SELFCLOSE')"
